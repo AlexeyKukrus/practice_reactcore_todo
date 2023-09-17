@@ -15,5 +15,4 @@ class TasksFilter extends React.Component {
 	};
 };
 
-
 export default TasksFilter;

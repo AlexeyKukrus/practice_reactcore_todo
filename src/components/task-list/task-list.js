@@ -4,12 +4,20 @@ import Task from '../task/task'
 
 import './task-list.css'
 
-const TaskList = ({ tasksNames}) => {
-  
+const TaskList = ({tasksNames, done, onDone, onDeleted}) => {
   const elements = tasksNames.map((item) => {
-    const {id, ...itemProps} = item
+    const { id, ...itemProps } = item
+    let classNames = '' 
+    if (item.done) {
+      classNames += 'completed'
+    }
     return (
-      <li key={id}><Task {...itemProps} /></li>
+      <li key={id} className={classNames}>
+        <Task
+          {...itemProps}
+          onDeleted={() => onDeleted(id)}
+          onDone={() => onDone(id)} />
+      </li>
     );    
   });
 
