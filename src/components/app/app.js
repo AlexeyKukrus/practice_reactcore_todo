@@ -8,13 +8,11 @@ import './app.css'
 class App extends React.Component{
 	constructor() {
 		super();
+		this.maxId = 100;
 		this.state = {
-			inputData:[
-				{ label: 'Complete Task', done: false, id: 1 },
-				{ label: 'Editing Task', done: false, id: 2 },
-				{ label: 'Active Task', done: false, id: 3 }
-			]
-		}
+			inputData: [],
+			filter: ''
+		};
 	}
 	
 	deleteItem = (id) => {
@@ -49,24 +47,63 @@ class App extends React.Component{
 		});
 	};
 
+	addItem = (text) => {
+		const newItem = {
+			label: text,
+			done: false,
+			id: this.maxId++
+		}
+		this.setState(({inputData}) => {
+			const newArray = [...inputData, newItem]
+			return {
+				inputData: newArray
+			}
+		})
+		
+	}
+
+	onFilterChange = (filter) => {
+		this.setState({ filter });
+	}
+
+	clearCompleted = () => {
+		const filteredData = this.state.inputData.filter(item => !item.done);
+		this.setState({ inputData: filteredData });
+	}
+
 	render() {
+		const counterDone = this.state.inputData.filter((el) => el.done).length;
+		const counterActive = this.state.inputData.length - counterDone;
+		const { inputData, filter } = this.state;
+		
+		let filteredTasks;
+		if (filter === 'completed') {
+			filteredTasks = inputData.filter(item => item.done);
+		} else if (filter === 'active') {
+			filteredTasks = inputData.filter(item => !item.done);
+		} else {
+			filteredTasks = inputData;
+		}
+
 		return (
 			<div className="todoapp">
 				<header className='header'>
 					<h1>todos</h1>
-					<NewTaskForm />
+					<NewTaskForm onAdded={this.addItem} />
 				</header>
 				<section className='main'>
 					<TaskList
-						tasksNames={this.state.inputData}
+						tasksNames={filteredTasks}
 						onDeleted={this.deleteItem}
 						onDone={this.doneItem}
 					/>
-					<Footer />
+					<Footer
+						active={counterActive} onFilterChange={this.onFilterChange} clearComplete={this.clearCompleted}/>
 				</section>
 				
 			</div>
 		);
 	}
 };
+
 export default App;

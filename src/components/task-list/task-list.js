@@ -4,7 +4,7 @@ import Task from '../task/task'
 
 import './task-list.css'
 
-const TaskList = ({tasksNames, done, onDone, onDeleted}) => {
+const TaskList = ({tasksNames, onDone, onDeleted}) => {
   const elements = tasksNames.map((item) => {
     const { id, ...itemProps } = item
     let classNames = '' 
