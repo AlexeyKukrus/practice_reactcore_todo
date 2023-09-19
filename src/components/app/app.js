@@ -11,19 +11,33 @@ class App extends React.Component{
 		this.maxId = 100;
 		this.state = {
 			inputData: [],
-			filter: ''
+			filter: 'all',
+			
 		};
 	}
+
+	searchIndex(arr, id) {
+		return arr.findIndex(item => item.id === id);
+	}
 	
+	toggleProperty(arr, id, propName) {
+		const idx = this.searchIndex(arr, id);
+		const oldItem = arr[idx];
+		return [
+			...arr.slice(0, idx),
+			{ ...oldItem, [propName]: !oldItem[propName] },
+			...arr.slice(idx + 1)
+		];
+	}
+
 	deleteItem = (id) => {
 		this.setState(({ inputData }) => {
-			
-			const idx = inputData.findIndex((el) => el.id === id);
+			const idx = this.searchIndex(inputData, id);
+
 			const before = inputData.slice(0, idx);
 			const after = inputData.slice(idx + 1);
 			const newArray = [...before, ...after];
 
-			
 			return {
 				inputData: newArray
 			};
@@ -32,17 +46,8 @@ class App extends React.Component{
 	
 	doneItem = (id) => {
 		this.setState(({ inputData }) => {
-
-			const idx = inputData.findIndex((el) => el.id === id);
-			const oldItem = inputData[idx];
-			const newItem = { ...oldItem, done: !oldItem.done }
-			
-			const before = inputData.slice(0, idx);
-			const after = inputData.slice(idx + 1);
-			const newArray = [...before, newItem, ...after];
-
 			return {
-				inputData: newArray
+				inputData: this.toggleProperty(inputData, id, 'done')
 			};
 		});
 	};
@@ -51,6 +56,8 @@ class App extends React.Component{
 		const newItem = {
 			label: text,
 			done: false,
+			date: new Date(),
+			edit: false,
 			id: this.maxId++
 		}
 		this.setState(({inputData}) => {
@@ -69,6 +76,27 @@ class App extends React.Component{
 	clearCompleted = () => {
 		const filteredData = this.state.inputData.filter(item => !item.done);
 		this.setState({ inputData: filteredData });
+	}
+
+	onToggleEdit = (id) => {
+		this.setState(({ inputData }) => {
+			return {
+				inputData: this.toggleProperty(inputData, id, 'edit')
+			}
+		})
+	}
+
+	editItem = (id, label) => {
+		this.setState(({ inputData }) => {
+			const idx = this.searchIndex(inputData, id);
+			const oldItem = inputData[idx];
+			const newDate = [
+				...inputData.slice(0, idx),
+				{ ...oldItem, label: label, edit: !oldItem.edit },
+				...inputData.slice(idx + 1)
+			];
+			return { inputData: newDate }
+		})
 	}
 
 	render() {
@@ -96,11 +124,16 @@ class App extends React.Component{
 						tasksNames={filteredTasks}
 						onDeleted={this.deleteItem}
 						onDone={this.doneItem}
+						onEdited={this.editItem}
+						onToggleEdit={this.onToggleEdit}
 					/>
 					<Footer
-						active={counterActive} onFilterChange={this.onFilterChange} clearComplete={this.clearCompleted}/>
+						active={counterActive}
+						onFilterChange={this.onFilterChange}
+						clearComplete={this.clearCompleted}
+						filter={this.state.filter}
+					/>
 				</section>
-				
 			</div>
 		);
 	}
