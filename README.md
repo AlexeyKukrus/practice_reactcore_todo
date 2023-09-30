@@ -1,2 +1,2 @@
 Todo App - link
-https://practice-reactcore-todo.vercel.app/
+https://practice-reactcore-todo-kukrusagz-gmailcom.vercel.app
