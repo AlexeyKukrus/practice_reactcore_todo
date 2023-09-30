@@ -18,9 +18,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src/**/*/*.js",
-    "lint:fix": "eslint ./src/**/*/*.js --fix",
-    "format": "prettier --write ./src/**/*/*.js"
+    "lint": "eslint ./src",
+    "lint:fix": "eslint ./src --fix",
+    "format": "prettier --write ./src"
   },
   "eslintConfig": {
     "extends": [
@@ -41,6 +41,7 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.23.0",
     "@babel/eslint-parser": "^7.22.15",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "babel-eslint": "^10.1.0",
@@ -55,11 +56,5 @@
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
     "prettier": "^3.0.3"
-  },
-  "lint-staged": {
-    "src/components/**/*.js": [
-      "eslint --fix",
-      "prettier --write"
-    ]
   }
 }

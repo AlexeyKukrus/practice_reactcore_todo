@@ -4,42 +4,59 @@ import { formatDistanceToNow } from 'date-fns';
 import './task.css';
 
 class Task extends React.Component {
-  state = {
-    label: this.props.label,
-  };
+  constructor(props) {
+    super();
+    this.label = props.todo.label;
+    this.state = {
+      labelState: this.label,
+    };
+  }
 
   onChangeLabel = (e) => {
-    this.setState({ label: e.target.value });
+    this.setState({ labelState: e.target.value });
   };
 
   onSubmit = (e) => {
+    const { labelState } = this.state;
+    const { onEdited, onDeleted } = this.props;
     e.preventDefault();
-    if (this.state.label !== '') {
-      this.props.onEdited(this.state.label);
+    if (labelState !== '') {
+      onEdited(labelState);
     } else {
-      this.props.onDeleted();
+      onDeleted();
+    }
+  };
+
+  onKeyDownEsc = (e) => {
+    if (e.keyCode === 27) {
+      this.setState({
+        labelState: this.label,
+      });
     }
   };
 
   render() {
-    const { label, done, date, edit, onDeleted, onDone, onToggleEdit } = this.props;
+    const { todo, onDeleted, onDone, onToggleEdit } = this.props;
+    const { id, label, done, date, edit } = todo;
+    const { labelState } = this.state;
+
     const formElement = (
-      <form onSubmit={this.onSubmit}>
-        <input onChange={this.onChangeLabel} type="text" className="edit" value={this.state.label} autoFocus />
+      <form onSubmit={this.onSubmit} onKeyDown={this.onKeyDownEsc} role="presentation">
+        <input onChange={this.onChangeLabel} type="text" className="edit" value={labelState} />
       </form>
     );
     return (
       <div>
         <div className="view">
-          <input type="checkbox" checked={done} className="toggle" onChange={onDone}></input>
-          <label>
-            <span className="description" onClick={onDone}>
+          <input type="checkbox" checked={done} className="toggle" onChange={onDone} />
+          <label htmlFor={id}>
+            <span className="description" onClick={onDone} role="presentation">
               {label}
             </span>
             <span className="created">created {formatDistanceToNow(date, { includeSeconds: true })}</span>
           </label>
-          <button className="icon icon-edit" onClick={onToggleEdit}></button>
-          <button className="icon icon-destroy" onClick={onDeleted}></button>
+          <button aria-label="edit" type="button" className="icon icon-edit" onClick={onToggleEdit} />
+          <button aria-label="delete" type="button" className="icon icon-destroy" onClick={onDeleted} />
         </div>
         {edit ? formElement : null}
       </div>
