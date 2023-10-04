@@ -107,6 +107,20 @@
   content: '✎';
 }
 
+.todo-list li .icon-pause, .todo-list li .icon-play {
+  position: relative;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+.icon-play:after {
+  content: '▶';
+}
+
+.icon-pause:after {
+  content: '⏸';
+}
+
 .todo-list li .edit {
   display: none;
 }
@@ -114,3 +128,4 @@
 .todo-list li.editing:last-child {
   margin-bottom: -1px;
 }
+

@@ -32,7 +32,7 @@ class App extends React.Component {
     }));
   };
 
-  addItem = (text) => {
+  addItem = (text, min, sec) => {
     const newItem = {
       // eslint-disable-next-line no-plusplus
       id: this.maxId++,
@@ -40,6 +40,7 @@ class App extends React.Component {
       done: false,
       date: new Date(),
       edit: false,
+      timer: +min * 60 + +sec,
     };
     this.setState(({ inputData }) => {
       const newArray = [...inputData, newItem];

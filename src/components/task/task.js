@@ -1,6 +1,8 @@
 import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 
+import Timer from '../timer/timer';
+
 import './task.css';
 
 class Task extends React.Component {
@@ -36,7 +38,7 @@ class Task extends React.Component {
   };
 
   render() {
-    const { todo, onDeleted, onDone, onToggleEdit } = this.props;
+    const { todo, onDeleted, onDone, onToggleEdit, timer } = this.props;
     const { id, label, done, date, edit } = todo;
     const { labelState } = this.state;
 
@@ -52,6 +54,9 @@ class Task extends React.Component {
           <label htmlFor={id}>
             <span className="description" onClick={onDone} role="presentation">
               {label}
+            </span>
+            <span className="created">
+              <Timer initialTime={timer} done={done} />
             </span>
             <span className="created">created {formatDistanceToNow(date, { includeSeconds: true })}</span>
           </label>

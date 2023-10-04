@@ -1,48 +1,63 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import './new-task-form.css';
 
 class NewTaskForm extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       label: '',
+      min: '',
+      sec: '',
     };
   }
 
-  onInputChange = (e) => {
-    this.setState({
-      label: e.target.value,
-    });
-  };
-
   onSubmit = (e) => {
     const { onAdded } = this.props;
-    const { label } = this.state;
+    const { label, min, sec } = this.state;
     e.preventDefault();
-    if (label.trim()) onAdded(label);
-    else alert('You didn`t finish the task');
-    this.setState({
-      label: '',
-    });
+    if (e.keyCode === 13) {
+      if (label.trim()) {
+        onAdded(label, min, sec);
+        this.setState({
+          label: '',
+          min: '',
+          sec: '',
+        });
+      } else {
+        alert('You didn`t finish the task');
+      }
+    }
   };
 
   render() {
-    const { label } = this.state;
+    const { label, min, sec } = this.state;
     return (
-      <form onSubmit={this.onSubmit}>
-        <input placeholder="What needs to be done?" className="new-todo" onChange={this.onInputChange} value={label} />
+      <form className="new-todo-form" onKeyUp={this.onSubmit} role="presentation">
+        <input
+          placeholder="What needs to be done?"
+          className="new-todo"
+          onChange={(e) => this.setState({ label: e.target.value })}
+          value={label}
+        />
+        <input
+          placeholder="Min"
+          className="new-todo-form__timer"
+          onChange={(e) => this.setState({ min: e.target.value })}
+          value={min}
+          min={0}
+          type="number"
+        />
+        <input
+          placeholder="Sec"
+          className="new-todo-form__timer"
+          onChange={(e) => this.setState({ sec: e.target.value })}
+          value={sec}
+          min={0}
+          type="number"
+        />
       </form>
     );
   }
 }
-
-NewTaskForm.defaultProps = {
-  onAdded: () => {},
-};
-
-NewTaskForm.propTypes = {
-  onAdded: PropTypes.func,
-};
 
 export default NewTaskForm;

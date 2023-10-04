@@ -23,6 +23,7 @@ function TaskList({ tasksNames, onDone, onDeleted, onEdited, onToggleEdit }) {
           onDone={() => onDone(id)}
           onEdited={(label) => onEdited(id, label)}
           onToggleEdit={() => onToggleEdit(id)}
+          timer={item.timer}
         />
       </li>
     );
