@@ -1,61 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-class Timer extends React.Component {
-  constructor(props) {
-    super(props);
-    const { initialTime } = this.props;
-    this.state = {
-      time: initialTime,
-      isRunning: false,
-    };
-  }
+const Timer = ({ initialTime, timer }) => {
+  const [time, setTime] = useState(initialTime);
+  const [isRunning, setIsRunning] = useState(false);
 
-  startTimer = () => {
-    const { isRunning, time } = this.state;
+  const startTimer = () => {
     if (!isRunning && time > 0) {
-      this.timer = setInterval(() => {
+      timer = setInterval(() => {
         if (time > 0) {
-          this.setState((prevState) => ({ time: prevState.time - 1 }));
+          setTime((prevTime) => prevTime - 1);
         } else {
-          clearInterval(this.timer);
-          this.setState({ isRunning: false });
+          clearInterval(timer);
+          setIsRunning(false);
         }
       }, 1000);
-      this.setState({ isRunning: true });
+      setIsRunning(true);
     }
   };
 
-  pauseTimer = () => {
-    clearInterval(this.timer);
-    this.setState({ isRunning: false });
+  const pauseTimer = () => {
+    clearInterval(timer);
+    setIsRunning(false);
   };
 
-  render() {
-    const { time, isRunning } = this.state;
+  const minutes = Math.floor(time / 60);
+  const seconds = time % 60;
 
-    const minutes = Math.floor(time / 60);
-    const seconds = time % 60;
-
-    return (
-      <>
-        <button
-          type="button"
-          className="icon icon-play"
-          onClick={this.startTimer}
-          disabled={isRunning}
-          aria-label="play"
-        />
-        <button
-          type="button"
-          className="icon icon-pause"
-          onClick={this.pauseTimer}
-          disabled={!isRunning}
-          aria-label="pause"
-        />
-        {` ${minutes}:${seconds}`}
-      </>
-    );
-  }
-}
+  return (
+    <>
+      <button type="button" className="icon icon-play" onClick={startTimer} disabled={isRunning} aria-label="play" />
+      <button type="button" className="icon icon-pause" onClick={pauseTimer} disabled={!isRunning} aria-label="pause" />
+      {` ${minutes}:${seconds}`}
+    </>
+  );
+};
 
 export default Timer;

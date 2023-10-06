@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './task-filter.css';
 
-function TasksFilter(props) {
-  const { filter, onFilterChange } = props;
-
+function TasksFilter({ filter, onFilterChange }) {
   const buttons = [
     { name: 'all', label: 'All' },
     { name: 'active', label: 'Active' },

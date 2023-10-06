@@ -5,7 +5,7 @@ import TasksFilter from '../task-filter/task-filter';
 
 import './footer.css';
 
-function Footer({ active, filter, onFilterChange, clearComplete }) {
+const Footer = ({ active, filter, onFilterChange, clearComplete }) => {
   return (
     <footer className="footer">
       <span className="todo-count">{active} items left</span>
@@ -15,7 +15,7 @@ function Footer({ active, filter, onFilterChange, clearComplete }) {
       </button>
     </footer>
   );
-}
+};
 
 Footer.defaultProps = {
   active: 0,
