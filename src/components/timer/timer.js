@@ -10,25 +10,39 @@ class Timer extends React.Component {
     };
   }
 
+  counter = undefined;
+
   startTimer = () => {
     const { isRunning, time } = this.state;
     if (!isRunning && time > 0) {
-      this.timer = setInterval(() => {
-        if (time > 0) {
-          this.setState((prevState) => ({ time: prevState.time - 1 }));
-        } else {
-          clearInterval(this.timer);
-          this.setState({ isRunning: false });
-        }
-      }, 1000);
       this.setState({ isRunning: true });
+      this.counter = setInterval(() => {
+        this.setState((state) => {
+          let updateTime;
+          if (state.time > 0) {
+            updateTime = state.time - 1;
+          } else {
+            updateTime = 0;
+          }
+          return {
+            time: updateTime,
+          };
+        });
+      }, 1000);
+    } else {
+      clearInterval(this.counter);
+      this.setState({ isRunning: false });
     }
   };
 
   pauseTimer = () => {
-    clearInterval(this.timer);
+    clearInterval(this.counter);
     this.setState({ isRunning: false });
   };
+
+  componentWillUnmount() {
+    clearInterval(this.counter);
+  }
 
   render() {
     const { time, isRunning } = this.state;

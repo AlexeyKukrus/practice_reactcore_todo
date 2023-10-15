@@ -37,6 +37,8 @@ class App extends React.Component {
       // eslint-disable-next-line no-plusplus
       id: this.maxId++,
       label: text,
+      min: min,
+      sec: sec,
       done: false,
       date: new Date(),
       edit: false,
