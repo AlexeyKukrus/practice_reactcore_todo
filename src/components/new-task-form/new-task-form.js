@@ -23,7 +23,6 @@ class NewTaskForm extends React.Component {
           min: '',
           sec: '',
         });
-        console.log(this.state);
       } else {
         alert('You didn`t finish the task');
       }

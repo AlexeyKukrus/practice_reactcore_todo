@@ -37,12 +37,12 @@ class App extends React.Component {
       // eslint-disable-next-line no-plusplus
       id: this.maxId++,
       label: text,
-      min: min,
-      sec: sec,
+      min: Number(min),
+      sec: Number(sec),
       done: false,
       date: new Date(),
       edit: false,
-      timer: +min * 60 + +sec,
+      timerId: 0,
     };
     this.setState(({ inputData }) => {
       const newArray = [...inputData, newItem];
@@ -105,6 +105,39 @@ class App extends React.Component {
     return [...arr.slice(0, idx), { ...oldItem, [propName]: !oldItem[propName] }, ...arr.slice(idx + 1)];
   }
 
+  uploadTimer = (id) => {
+    this.setState(({ inputData }) => {
+      const index = this.searchIndex(inputData, id);
+      const oldItem = inputData[index];
+      const { min, sec } = oldItem;
+      let newSec = sec - 1;
+      let newMin = min;
+      if (newSec < 0) {
+        if (newMin <= 0) {
+          newSec = 0;
+          newMin = 0;
+        } else {
+          newSec = 59;
+          newMin = min - 1;
+        }
+      }
+      const newArray = [
+        ...inputData.slice(0, index),
+        { ...oldItem, min: newMin, sec: newSec },
+        ...inputData.slice(index + 1),
+      ];
+      return { inputData: newArray };
+    });
+  };
+
+  editTimerId = (id, timerId) => {
+    this.setState(({ inputData }) => {
+      const index = this.searchIndex(inputData, id);
+      const oldItem = inputData[index];
+      const newDate = [...inputData.slice(0, index), { ...oldItem, timerId }, ...inputData.slice(index + 1)];
+      return { inputData: newDate };
+    });
+  };
   render() {
     const { inputData, filter } = this.state;
     const counterDone = inputData.filter((el) => el.done).length;
@@ -123,6 +156,8 @@ class App extends React.Component {
             onDone={this.doneItem}
             onEdited={this.editItem}
             onToggleEdit={this.onToggleEdit}
+            onUploadTimer={this.uploadTimer}
+            onEditTimerId={this.editTimerId}
           />
           <Footer
             active={counterActive}
